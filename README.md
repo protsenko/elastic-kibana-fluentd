@@ -1,5 +1,5 @@
 Version of docker-compose is 3.3. Docker engine has to be upgraded for version 17.06.0
-or higher. Full list of version [here](https://docs.docker.com/compose/compose-file/compose-versioning/).
+or higher. Full versions list [here](https://docs.docker.com/compose/compose-file/compose-versioning/).
 
 If you run the containers with 
 [Oracle VirtualBox](https://www.virtualbox.org/)
