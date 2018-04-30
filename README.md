@@ -1,6 +1,6 @@
 If you run the containers with 
 [Oracle VirtualBox](https://www.virtualbox.org/)
-you must to start your virtual machine with 4Gb RAM at least.
+you have to start your virtual machine with 4Gb RAM at least.
 
 Also the virtual machine must be configured with vm.max_map_count option.
 ```
