@@ -1,0 +1,112 @@
+version: '3.3'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=home-docker-cluster
+      - node.master=true 
+      - node.data=true 
+      - node.ingest=false 
+      - search.remote.connect=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - esnet
+    volumes:
+      - type: volume
+        source: es-master-data
+        target: /var/data/elasticsearch
+      - type: volume 
+        source: es-master-logs 
+        target: /var/log/elasticsearch
+
+  elasticsearch-data-1:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: elasticsearch-data-1
+    environment:
+      - cluster.name=home-docker-cluster
+      - node.master=false 
+      - node.data=true 
+      - node.ingest=true 
+      - search.remote.connect=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms768m -Xmx768m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - esnet
+    volumes:
+      - type: volume
+        source: es-data1-data 
+        target: /var/data/elasticsearch
+      - type: volume 
+        source: es-data1-logs 
+        target: /var/log/elasticsearch
+
+  elasticsearch-data-2:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: elasticsearch-data-2
+    environment:
+      - cluster.name=home-docker-cluster
+      - node.master=false 
+      - node.data=true 
+      - node.ingest=true 
+      - search.remote.connect=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms768m -Xmx768m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - esnet
+    volumes:
+      - type: volume
+        source: es-data2-data 
+        target: /var/data/elasticsearch
+      - type: volume 
+        source: es-data2-logs 
+        target: /var/log/elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.2.4
+    container_name: kibana
+    ports:
+      - 5601:5601
+    networks:
+      - esnet
+
+  fluent:
+    build: ./fluentd
+    image: dprotsenko/fluentd:stable
+    container_name: fluentd
+    hostname: fluentd
+    volumes:
+      - ./fluentd/config:/fluentd/etc
+    networks:
+      - esnet
+
+networks:
+  esnet:
+    driver: bridge
+
+volumes:
+  es-master-data:
+  es-master-logs:
+  es-data1-data:
+  es-data1-logs:
+  es-data2-data:
+  es-data2-logs:
