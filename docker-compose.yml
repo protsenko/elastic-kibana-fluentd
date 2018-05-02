@@ -90,14 +90,15 @@ services:
       - esnet
 
   fluent:
-    build: ./fluentd
-    image: dprotsenko/fluentd:stable
+    image: dprotsenko/fluentd
     container_name: fluentd
     hostname: fluentd
     volumes:
       - ./fluentd/config:/fluentd/etc
     networks:
       - esnet
+    ports:
+      - 24224:24224
 
 networks:
   esnet:
